@@ -76,12 +76,10 @@ export const getAllJobs = async (req, res) => {
     }
     return res.status(200).json({ jobs, status: true });
   } catch (error) {
-    return res
-      .status(500)
-      .json({
-        message: "Server Error while fetching all job posts",
-        status: false,
-      });
+    return res.status(500).json({
+      message: "Server Error while fetching all job posts",
+      status: false,
+    });
   }
 };
 
@@ -90,19 +88,18 @@ export const getJobById = async (req, res) => {
   try {
     const jobId = req.params.id;
     const job = await Job.findById(jobId).populate({
-      path: "applications"});
+      path: "applications",
+    });
 
     if (!job) {
       return res.status(404).json({ message: "Job not found", status: false });
     }
     return res.status(200).json({ job, status: true });
   } catch (error) {
-    return res
-      .status(500)
-      .json({
-        message: "Server Error while fetching job posts by id",
-        status: false,
-      });
+    return res.status(500).json({
+      message: "Server Error while fetching job posts by id",
+      status: false,
+    });
   }
 };
 
@@ -110,7 +107,10 @@ export const getJobById = async (req, res) => {
 export const getAdminJob = async (req, res) => {
   try {
     const adminId = req.id;
-    const jobs = await Job.find({ created_by: adminId });
+    const jobs = await Job.find({ created_by: adminId }).populate({
+      path: "company",
+      sort: { createdAt: -1 },
+    });
 
     if (!jobs) {
       return res.status(404).json({ message: "No jobs found", status: false });
@@ -120,11 +120,9 @@ export const getAdminJob = async (req, res) => {
       status: true,
     });
   } catch (error) {
-    return res
-      .status(500)
-      .json({
-        message: "Server Error while fetching job posts by logged admin",
-        status: false,
-      });
+    return res.status(500).json({
+      message: "Server Error while fetching job posts by logged admin",
+      status: false,
+    });
   }
 };
