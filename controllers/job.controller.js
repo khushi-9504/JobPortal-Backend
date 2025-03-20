@@ -43,7 +43,7 @@ export const postJob = async (req, res) => {
       jobType,
       position,
       company: companyId,
-      experienceLevel: experience,
+      experience: experience,
       created_by: userId,
     });
 
