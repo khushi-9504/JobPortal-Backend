@@ -126,3 +126,27 @@ export const getAdminJob = async (req, res) => {
     });
   }
 };
+
+//Delete Admin job
+export const deleteJob = async (req, res) => {
+  try {
+    const jobId = req.params.id;
+
+    // Find and delete the job
+    const deletedJob = await Job.findByIdAndDelete(jobId);
+
+    if (!deletedJob) {
+      return res.status(404).json({ message: "Job not found", status: false });
+    }
+
+    return res
+      .status(200)
+      .json({ message: "Job deleted successfully", status: true });
+  } catch (error) {
+    console.error("Server Error while deleting job: ", error);
+    return res.status(500).json({
+      message: "Server Error while deleting job",
+      status: false,
+    });
+  }
+};
