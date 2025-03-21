@@ -150,3 +150,51 @@ export const deleteJob = async (req, res) => {
     });
   }
 };
+//Update Admin job
+
+export const updateJob = async (req, res) => {
+  try {
+    const {
+      title,
+      description,
+      requirements,
+      salary,
+      location,
+      jobType,
+      experience,
+      position,
+      companyId,
+    } = req.body;
+
+    // Prepare update data
+    const updateData = {
+      title,
+      description,
+      requirements,
+      salary,
+      location,
+      jobType,
+      experience,
+      position,
+      companyId,
+    };
+
+    // Find and update job
+    const job = await Job.findByIdAndUpdate(req.params.id, updateData, {
+      new: true,
+    });
+
+    if (!job) {
+      return res.status(404).json({ message: "Job not found" });
+    }
+
+    return res.status(200).json({
+      message: "Job details updated successfully.",
+      job,
+      success: true,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
