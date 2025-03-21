@@ -105,15 +105,18 @@ export const deleteCompany = async (req, res) => {
 
     // Find all jobs associated with this company
     const jobs = await Job.find({ company: companyId });
-    // Extract job IDs
-    const jobIds = jobs.map((job) => job._id);
 
-    // Delete all applicants related to those jobs
-    await Applicant.deleteMany({ job: { $in: jobIds } });
+    if (jobs.length > 0) {
+      // Extract job IDs
+      const jobIds = jobs.map((job) => job._id);
 
-    // Delete all jobs associated with the company
-    await Job.deleteMany({ company: companyId });
-    // Find and delete the company
+      // Delete all applications related to those jobs
+      await Application.deleteMany({ job: { $in: jobIds } });
+
+      // Delete all jobs associated with the company
+      await Job.deleteMany({ company: companyId });
+    }
+
     const deletedCompany = await Company.findByIdAndDelete(companyId);
 
     if (!deletedCompany) {
