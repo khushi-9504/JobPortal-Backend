@@ -194,10 +194,17 @@ export const updateProfile = async (req, res) => {
     // console.log(fullname, email, phoneNumber, bio, skills);
 
     //Cloudinary upload
-    const fileUri = getDataUri(file);
-    const cloudinaryResponse = await cloudinary.uploader.upload(
-      fileUri.content
-    );
+    // const fileUri = getDataUri(file);
+    // const cloudinaryResponse = await cloudinary.uploader.upload(
+    //   fileUri.content
+    // );
+
+    // Cloudinary upload (only if a file is provided)
+    let cloudinaryResponse;
+    if (file) {
+      const fileUri = getDataUri(file);
+      cloudinaryResponse = await cloudinary.uploader.upload(fileUri.content);
+    }
 
     let skillsArray;
 
@@ -230,10 +237,17 @@ export const updateProfile = async (req, res) => {
     if (skills) user.profile.skills = skillsArray;
 
     //resume
-    if (cloudinaryResponse) {
+    // if (cloudinaryResponse) {
+    //   user.profile.resume = cloudinaryResponse.secure_url;
+    //   user.profile.resumeOriginalname = file.originalname;
+    // }
+
+    // Update resume only if a new file is uploaded
+    if (file && cloudinaryResponse) {
       user.profile.resume = cloudinaryResponse.secure_url;
       user.profile.resumeOriginalname = file.originalname;
     }
+
     await user.save();
 
     user = {
