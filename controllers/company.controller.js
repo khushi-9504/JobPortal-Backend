@@ -1,7 +1,8 @@
 import { Company } from "../models/company.model.js";
 import cloudinary from "../utils/cloud.js";
 import getDataUri from "../utils/datauri.js";
-
+import { Job } from "../models/job.model.js";
+import { Application } from "../models/application.model.js";
 export const registerCompany = async (req, res) => {
   try {
     const { companyName } = req.body;
@@ -102,6 +103,16 @@ export const deleteCompany = async (req, res) => {
   try {
     const companyId = req.params.id;
 
+    // Find all jobs associated with this company
+    const jobs = await Job.find({ company: companyId });
+    // Extract job IDs
+    const jobIds = jobs.map((job) => job._id);
+
+    // Delete all applicants related to those jobs
+    await Applicant.deleteMany({ job: { $in: jobIds } });
+
+    // Delete all jobs associated with the company
+    await Job.deleteMany({ company: companyId });
     // Find and delete the company
     const deletedCompany = await Company.findByIdAndDelete(companyId);
 

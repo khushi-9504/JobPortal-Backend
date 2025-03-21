@@ -1,6 +1,6 @@
 import { Job } from "../models/job.model.js";
+import { Application } from "../models/application.model.js";
 
-//Admin Job Posting
 export const postJob = async (req, res) => {
   try {
     const {
@@ -131,6 +131,8 @@ export const getAdminJob = async (req, res) => {
 export const deleteJob = async (req, res) => {
   try {
     const jobId = req.params.id;
+    // Delete all applicants related to this job
+    await Application.deleteMany({ job: jobId });
 
     // Find and delete the job
     const deletedJob = await Job.findByIdAndDelete(jobId);
