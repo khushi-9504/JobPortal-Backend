@@ -187,7 +187,8 @@ export const logout = (req, res) => {
 
 export const updateProfile = async (req, res) => {
   try {
-    const { fullname, email, phoneNumber, bio, skills } = req.body;
+    const { fullname, email, phoneNumber, pancard, adharcard, bio, skills } =
+      req.body;
     const file = req.file;
 
     // console.log(fullname, email, phoneNumber, bio, skills);
@@ -220,6 +221,8 @@ export const updateProfile = async (req, res) => {
     if (email) user.email = email;
 
     if (phoneNumber) user.phoneNumber = phoneNumber;
+    if (pancard) user.pancard = pancard;
+    if (adharcard) user.adharcard = adharcard;
 
     if (bio) user.profile.bio = bio;
 
@@ -238,6 +241,8 @@ export const updateProfile = async (req, res) => {
       fullname: user.fullname,
       email: user.email,
       phoneNumber: user.phoneNumber,
+      pancard: user.pancard,
+      adharcard: user.adharcard,
       role: user.role,
       skills: user.profile.skills,
       profile: user.profile,
